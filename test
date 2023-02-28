@@ -1,0 +1,338 @@
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- CSS -->
+    <link href="../gobmx/assets/styles/main.css" rel="stylesheet">
+<title>SAT Autenticaci&oacute;n</title>
+</head>
+
+<body style="padding-top: 0px;">
+
+<!-- Contenido -->
+<main class="page">
+    <div class="container" style="width: 100%;" id="container">
+<ol id="breadcrumb" class="breadcrumb" hidden style="margin-left: 8px;"> </ol>
+        <div class="row">
+            <!-- Formulario horizontal, 2/3 como se indica en  GobMX-->
+            <div class="col-sm-8 bottom-buffer">
+                <!-- Titulo -->
+                <div class="bottom-buffer">
+                    <h3>Acceso por contrase&ntilde;a</h3>
+                </div>
+                <!-- Mensaje de error -->
+                <div class="row" style="display: none;" id="divMsgError">
+                    <div class="col-sm-12">
+                        <div class="alert alert-danger" id="msgError"></div>
+                    </div>
+                </div>
+                <!-- Formulario -->
+                <form role="form" id="IDPLogin" name="IDPLogin" enctype="application/x-www-form-urlencoded"
+                      method="POST"
+                      class="form-horizontal" autocomplete="off">
+                    <input type="hidden" name="option" value="credential">
+                    
+
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="rfc">RFC:</label>
+                        <div class="col-sm-8">
+                            <input
+                                    class="form-control"
+                                    id="rfc"
+                                    placeholder="RFC"
+                                    type="text"
+                                    name="Ecom_User_ID"
+                                    size="25"
+                                    value=""
+                                    onblur="javascript:this.value = this.value.toUpperCase();"
+                                    autocomplete="off"
+                            >
+                            <span id="msgErrorRfc"
+                                  style="display: none; color: red; font-size: 11px; font-weight: initial;">Este campo es obligatorio.</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="password">
+                            Contrase&ntilde;a:
+                            <span style="left: -2px;" class="glyphicon glyphicon-question-sign" aria-hidden="true"
+                                  data-toggle="tooltip" data-placement="right"
+                                  title="Esta contrase&ntilde;a es la misma de su CIEC o CIEC fortalecida"></span>
+                        </label>
+                        <div class="col-sm-8">
+                            <input
+                                    class="form-control"
+                                    id="password"
+                                    placeholder="Contrase&ntilde;a"
+                                    type="password"
+                                    name="Ecom_Password"
+                                    size="25"
+                                    maxlength="16"
+                                    autocomplete="off"
+                            >
+                            <span id="msgErrorPass"
+                                  style="display: none; color: red; font-size: 11px; font-weight: initial;">Este campo es obligatorio.</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="claveDinamica">e.firma portable:</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" disabled id="claveDinamica" placeholder="Clave din&aacute;mica"
+                                   type="password">
+                        </div>
+                    </div>
+<!--CAPTCHA-->
+
+        
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="userCaptcha" style="padding-top: 25px;">Captcha:</label>
+                        <label class="col-sm-3 control-label" id="divCaptcha">
+                            <img src="data:image/jpeg;base64,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">
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-8">
+                            <input class="form-control" id="userCaptcha" placeholder="Escriba la palabra del captcha" type="text" name="userCaptcha" size="25" maxlength="16" autocomplete="off" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                            <span id="msgErrorCap" style="display: none; color: red; font-size: 11px; font-weight: initial;">Este campo es obligatorio.</span>
+                        </div>
+                    </div>
+                    
+
+        <!--FIN CAPTCHA-->
+
+                    <div class="clearfix">
+                        <div class="pull-right">
+                            <button type="button" class="btn btn-default" id="buttonFiel">e.firma</button>
+                            <input
+                                    class="btn btn-primary"
+                                    type="submit"
+                                    value="Enviar"
+                                    id="submit"
+                                    name="submit">
+                            </input>
+                        </div>
+                    </div>
+                    <p style="text-align: right; padding-top: 20px;"><a id="linkPass">&#191Olvidaste tu
+                        contrase&ntilde;a?</a></p>
+
+                    <p style="text-align: right">Si a&uacute;n no cuentas con tu contrase&ntilde;a, obtenla
+                        <a href="https://portalsat.plataforma.sat.gob.mx/CIECInternet/CIECRegister/askRFC.action">aqu&iacute;</a>.
+                    </p>
+
+                    <p style="text-align: right">Si a&uacute;n no cuentas con tu e.firma portable, obtenla
+                        <a href="https://www.siat.sat.gob.mx/PTSC/faces/pages/lanzador.jsf?url=/PTSC/asc/faces/pages/generar/authRFC.jsf&tipoLogeo=cs&target=principal&hostserver=https://aplicaciones.sat.gob.mx">aqu&iacute;</a>.
+                    </p>
+
+                    <p style="text-align: right"><a id="linkeFirma">Requisitos de uso de e.firma portable</a></p>
+                </form>
+            </div>
+            <div class="col-sm-4">
+                <div class="row"></div>
+            </div>
+			
+			<!--Inicio Aviso-->
+			<div class="col-sm-12">
+			<div class="row"></div>
+			<div style=
+			"background-color: #D9EDF7;
+			width: 100%;
+			border: 2px #BCE8F1;
+			padding: 20px;
+			margin: 2px;
+			font-size: 18px;
+			border-style: solid;
+			overflow: auto;">
+			<font color="#31708F"><center><b>Aviso de privacidad simplificado</b></center>
+			<center>El Servicio de Administraci&oacute;n Tributaria, es el responsable del tratamiento de los datos personales que se recolectan a trav&eacute;s de su portal de internet <a target="_blank" onclick="window.open('https://www.sat.gob.mx')">(https://www.sat.gob.mx)</a>, los cuales son protegidos conforme a lo dispuesto en la Ley General de Protecci&oacute;n de Datos Personales en Posesi&oacute;n de Sujetos Obligados y la normatividad que resulte aplicable.</center>
+			<br style= "line-height: 20px;">
+			<center>Para mayor informaci&oacute;n acerca de este tema y de los derechos que puedes hacer valer, ponemos a tu disposici&oacute;n el Aviso de privacidad en el sitio: <a target="_blank" onclick="window.open('https://repositorio.cloudb.sat.gob.mx/FTP/avisoprivacidad/802_NV_aviso_integral.html')">https://repositorio.cloudb.sat.gob.mx/FTP/avisoprivacidad/802_NV_aviso_integral.html</a></center></font>
+			</div>
+			<br>
+			<br>
+			<!--Fin Aviso-->
+			
+			
+			
+        </div>
+<div id="reqEfirma" class="modal fade" role="dialog" style="display: none;">
+            <div class="modal-dialog modal-lg" style="width: 90%;">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">Ã—</button>
+                        <h4 class="modal-title">Requisitos de uso de e.firma portable</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p style="text-align : justify;">
+                            Para hacer uso de este servicio debes cumplir con los siguientes requisitos:
+                        </p>
+                        <p style="text-align : justify;">
+                            e.firma vigente (archivos .cer y .key).si a&uacute;n no cuentas con ella, conoce los requisitos
+                            para su tr&aacute;mite, <a href="http://www.sat.gob.mx/fichas_tematicas/fiel/Paginas/obtener_fiel.aspx" target="_blank">aqu&iacute;.</a>
+                        </p>
+                        <p>
+                            ContraseÃ±a (antes CIEC) actualizada, si no cuentas con ella, tr&aacute;mitala
+                            <a href="https://portalsat.plataforma.sat.gob.mx/CIECInternet/CIECCore/main.action" target="_blank">aqu&iacute;.</a>
+                        </p>
+                        <p>
+                            Correo electr&oacute;nico registrado en BuzÃ³n Tr&iacute;butario, si deseas realizar el registro en este
+                            momento, da clic
+                            <a href="https://www.siat.sat.gob.mx/PTSC/index.jsp" target="_blank">aqu&iacute;.</a>
+                        </p>
+                        <p>Para el aplicativo de administraci&oacute;n ubicado en el portal de tr&aacute;mites y servicios, los
+                            requerimientos son:</p>
+                        <p>
+                        </p><ul>
+                            <li>Internet Explorer 10 o superior</li>
+                            <li>Firefox 30.0 o superior</li>
+                            <li>Safari 6.1 o superior</li>
+                            <li>Chrome 27.0 o superior</li>
+                        </ul>
+                        <p></p>
+                        <p>
+                            Dispositivo m&oacute;vil (tel&eacute;fono inteligente o tableta), con los siguientes requerimientos
+                            m&iacute;nimos:
+                        </p>
+                        <p>
+                        </p><ul>
+                            <li>Servicio de Datos</li>
+                            <li>SO Android 4.0 o superior</li>
+                            <li>SO iOS7 o superior</li>
+                        </ul>
+                        <p></p>
+                        <p>Contar con la app SAT m&oacute;vil previamente instalada en el dispositivo, la cual podr&aacute;s descargar
+                            a trav&eacute;s del Play Store o Apple Store.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</main>
+
+<script type="text/javascript">
+    //Variables globales
+    var root = 'https://loginda.siat.sat.gob.mx/';
+    var path = root + 'nidp/gobmx/assets/';
+    var imagesPath = path + 'images/';
+    var scriptsPath = path + 'scripts/';
+    var stylesPath = path + 'styles/';
+
+    var showEncabezado = false;
+    try {
+        window.parent.document
+        if (window.parent.document == undefined) {
+            showEncabezado = false;
+        } else {
+            showEncabezado = true;
+        }
+    } catch (e) {
+        showEncabezado = false;
+    }
+</script>
+
+<!-- JS -->
+<script src="/nidp/gobmx/assets/scripts/respond.min.js"></script>
+<script src="/nidp/gobmx/assets/scripts/jquery.min.js"></script>
+<script src="/nidp/gobmx/assets/scripts/ie8.js"></script>
+<script src="/nidp/gobmx/assets/scripts/gobmx.js"></script>
+
+<script>
+    $gmx(document).ready(function () {
+        //Validar error
+        var error = '';
+
+        if (error != "" || error.length != 0) {
+            $('#msgError').html('<strong>Error!</strong> ' + error);
+            $('#divMsgError').show();
+        }
+
+        //submit
+        $("#IDPLogin").submit(function (event) {
+            //Se validan los campos
+            if (validate()) {
+                $("#IDPLogin").submit();
+            } else {
+                event.preventDefault();
+            }
+        });
+
+        //Link para olvidaste tu contraseÃ±a
+        $('#linkPass').click(function () {
+            $(location).attr('href', 'https://www.siat.sat.gob.mx/PTSC/auth/faces/pages/restablecer/rc_inicio.jsf')
+        });
+        //Link para requisitos de e.firma portable
+        $('#linkeFirma').click(function () {
+            //cargar en un DIV como popup la liga de los requisitos
+            $("#reqEfirma").modal();
+            $("#reqEfirma").show();
+        });
+
+        //Boton FIEL
+        $('#buttonFiel').click(function () {
+            $(location).attr('href', '/nidp/app/login?id=fiel&sid=0&option=credential&sid=0')
+        });
+
+
+        //funcion para validar los campos
+        function validate() {
+            $('#msgErrorRfc').hide();
+            $('#msgErrorPass').hide();
+            $('#msgErrorCap').hide();
+            $('#rfc').css({'borderColor': '#ccc'});
+            $('#password').css({'borderColor': '#ccc'});
+            $('#userCaptcha').css({'borderColor': '#ccc'});
+
+            var continuar = true;
+            var rfcInput = $('#rfc').val();
+            var passwordInput = $('#password').val();
+                        var jcaptchaInput = $('#userCaptcha').val();
+
+            var error = '';
+            if (rfcInput == '') {
+                $('#rfc').css({'borderColor': '#D0021B'});
+                $('#msgErrorRfc').show();
+
+                $('#divMsgError').show();
+                $('#msgError').html('<strong>&iexcl;Error de registro!</strong> no ha llenado varios campos requeridos. Por favor verifique.');
+                continuar = false;
+            }
+            if (passwordInput == '') {
+                $('#password').css({'borderColor': '#D0021B'});
+                $('#msgErrorPass').show();
+                continuar = false;
+                $('#divMsgError').show();
+                $('#msgError').html('<strong>&iexcl;Error de registro!</strong> no ha llenado varios campos requeridos. Por favor verifique.');
+            }
+                        var vc = true;
+            var ce = false;
+            if(vc && !ce){
+                var jcaptchaInput = $('#userCaptcha').val();
+                if (jcaptchaInput == '') {
+                    $('#userCaptcha').css({'borderColor': '#D0021B'});
+                    $('#msgErrorCap').show();
+                    continuar = false;
+                    $('#divMsgError').show();
+                    $('#msgError').html('<strong>&iexcl;Error de registro!</strong> no ha llenado varios campos requeridos. Por favor verifique.');
+                }
+            }
+
+            return continuar;
+        }
+
+        //render captcha
+    });
+
+
+</script>
+
+</body>
+</html>
